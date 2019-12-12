@@ -92,3 +92,15 @@
 /OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.g.props
 /OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.g.targets
 /OpeningServer/OpeningServer/obj/project.assets.json
+/OpeningServer/Contracts/obj
+/OpeningServer/Contracts/bin
+/OpeningServer/.vs/OpeningServer/v16/.suo
+/OpeningServer/.vs/OpeningServer/v16/Server/sqlite3/db.lock
+/OpeningServer/.vs/OpeningServer/v16/Server/sqlite3/storage.ide
+/OpeningServer/Entities/obj/Entities.csproj.nuget.dgspec.json
+/OpeningServer/Repository/obj/Repository.csproj.nuget.dgspec.json
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.dll
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.pdb
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.dll
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.pdb
+/OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.dgspec.json
