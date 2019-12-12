@@ -13,5 +13,11 @@ namespace Entities.Models
         public Guid IdDrawing { get; set; }
         public Guid IdRevitElement { get; set; }
         public string Status { get; set; }
+
+        [ForeignKey(nameof(IdManager))]
+        public virtual ElementManagement ElementManagement { get; set; }
+
+        [ForeignKey(nameof(IdDrawing))]
+        public virtual Drawing Drawing { get; set; }
     }
 }

@@ -12,5 +12,12 @@ namespace Entities.Models
         public Guid IdProject { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
+
+        [ForeignKey(nameof(IdProject))]
+        public virtual Project Project { get; set; }
+
+        public virtual IEnumerable<Element> Elements { get; set; }
+
+        public virtual IEnumerable<Revision> Revisions { get; set; }
     }
 }

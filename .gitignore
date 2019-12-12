@@ -99,6 +99,11 @@
 /OpeningServer/.vs/OpeningServer/v16/Server/sqlite3/storage.ide
 /OpeningServer/Entities/obj/Entities.csproj.nuget.dgspec.json
 /OpeningServer/Repository/obj/Repository.csproj.nuget.dgspec.json
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Entities.dll
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Entities.pdb
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Microsoft.EntityFrameworkCore.dll
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Microsoft.EntityFrameworkCore.xml
+/OpeningServer/Contracts/obj/Debug/netcoreapp2.2/Contracts.csproj.CopyComplete
 /OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.dll
 /OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.pdb
 /OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.dll

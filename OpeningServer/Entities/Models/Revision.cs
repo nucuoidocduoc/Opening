@@ -11,5 +11,8 @@ namespace Entities.Models
         public Guid Id { get; set; }
         public Guid IdDrawing { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        [ForeignKey(nameof(IdDrawing))]
+        public virtual Drawing Drawing { get; set; }
     }
 }
