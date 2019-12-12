@@ -92,3 +92,12 @@
 /OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.g.props
 /OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.g.targets
 /OpeningServer/OpeningServer/obj/project.assets.json
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Entities.dll
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Entities.pdb
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Microsoft.EntityFrameworkCore.dll
+/OpeningServer/Contracts/bin/Debug/netcoreapp2.2/Microsoft.EntityFrameworkCore.xml
+/OpeningServer/Contracts/obj/Debug/netcoreapp2.2/Contracts.csproj.CopyComplete
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.dll
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Contracts.pdb
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.dll
+/OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.pdb

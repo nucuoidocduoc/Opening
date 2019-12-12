@@ -17,5 +17,8 @@ namespace Entities.Models
         public DateTime CreatedDate { get; set; }
         public Guid IdUserEdited { get; set; }
         public string Status { get; set; }
+
+        [ForeignKey(nameof(IdManager))]
+        public virtual ElementManagement ElementManagement { get; set; }
     }
 }
