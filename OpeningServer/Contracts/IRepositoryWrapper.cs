@@ -14,6 +14,6 @@ namespace Contracts
         ICheckoutVersionRepository CheckoutVersion { get; }
         IRevisionRepository Revision { get; }
 
-        void Save();
+        void SaveChangesAsync();
     }
 }

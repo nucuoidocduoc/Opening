@@ -9,5 +9,7 @@ namespace Contracts
     public interface IDrawingRepository : IRepositoryBase<Drawing>
     {
         Task<Drawing> GetDrawingByNameAsync(string name);
+
+        Task<IEnumerable<Drawing>> GetAllDrawingAsync();
     }
 }

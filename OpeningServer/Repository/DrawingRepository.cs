@@ -15,9 +15,14 @@ namespace Repository
         {
         }
 
+        public async Task<IEnumerable<Drawing>> GetAllDrawingAsync()
+        {
+            return await FindAll().ToListAsync();
+        }
+
         public async Task<Drawing> GetDrawingByNameAsync(string name)
         {
-            return await FindByCondition(draw => draw.Name.Equals(name)).Include(x => x.Elements).FirstOrDefaultAsync();
+            return await FindByCondition(draw => draw.Name.Equals(name)).FirstOrDefaultAsync();
         }
     }
 }

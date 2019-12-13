@@ -54,7 +54,9 @@ namespace OpeningServer
             app.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.All
             });
-
+            app.UseMvc(routes => {
+                routes.MapRoute("default", "{controller=Home}/{action=Index}/{Id?}");
+            });
             app.UseMvc();
         }
     }

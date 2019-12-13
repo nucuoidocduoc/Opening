@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,11 @@ namespace Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
+        public RepositoryWrapper(RepositoryContext repositoryContext)
+        {
+            _repositoryContext = repositoryContext;
+        }
+
         private RepositoryContext _repositoryContext;
         private IProjectRepository _projectRepository;
         private IDrawingRepository _drawingRepository;
@@ -31,7 +37,7 @@ namespace Repository
 
         public IRevisionRepository Revision => _revisionRepository ?? new RevisionRepository(_repositoryContext);
 
-        public async void Save()
+        public async void SaveChangesAsync()
         {
             await _repositoryContext.SaveChangesAsync().ConfigureAwait(false);
         }
