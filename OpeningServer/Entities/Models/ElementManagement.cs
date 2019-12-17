@@ -13,5 +13,7 @@ namespace Entities.Models
         public string Status { get; set; }
 
         public virtual IEnumerable<Element> Elements { get; set; }
+
+        public virtual IEnumerable<GeometryVersion> GeometryVersions { get; set; }
     }
 }

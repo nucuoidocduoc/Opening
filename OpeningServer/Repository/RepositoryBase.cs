@@ -24,6 +24,11 @@ namespace Repository
             RepositoryContext.Set<T>().Update(entity);
         }
 
+        public void Add(T entity)
+        {
+            RepositoryContext.Set<T>().Add(entity);
+        }
+
         public void Delete(T entity)
         {
             RepositoryContext.Set<T>().Remove(entity);
