@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities.Models;
+using OpeningServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ namespace OpeningServer.Helper
     {
         protected Guid _drawingId;
         protected IRepositoryWrapper _repository;
-        protected LocalDataModel _localDataModel;
+        protected LocalDataModelDTO<ElementGetDTO> _localDataModel;
 
-        public Updating(LocalDataModel localDataModel, Guid drawingId, IRepositoryWrapper repository)
+        public Updating(LocalDataModelDTO<ElementGetDTO> localDataModel, Guid drawingId, IRepositoryWrapper repository)
         {
             _repository = repository;
             _drawingId = drawingId;

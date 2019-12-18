@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Contracts
 {
@@ -14,6 +16,6 @@ namespace Contracts
         ICheckoutVersionRepository CheckoutVersion { get; }
         IRevisionRepository Revision { get; }
 
-        void SaveChangesAsync();
+        Task SaveChangesAsync();
     }
 }

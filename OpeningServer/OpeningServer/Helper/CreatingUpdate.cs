@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using OpeningServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace OpeningServer.Helper
 {
     public class CreatingUpdate : Updating, IUpdatingData
     {
-        public CreatingUpdate(LocalDataModel localDataModel, Guid drawingId, IRepositoryWrapper repository)
+        public CreatingUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, Guid drawingId, IRepositoryWrapper repository)
             : base(localDataModel, drawingId, repository)
         {
         }
@@ -61,7 +62,7 @@ namespace OpeningServer.Helper
 
         private async void ImplementCreatNewElementPending()
         {
-            var openingReCreate = _localDataModel.OpeningFromPendingCreate.Where(x => x.Action.Equals("ReCreateWhenDeletedChangeToPendingCreate"));
+            var openingReCreate = _localDataModel.OpeningsPendingCreate.Where(x => x.Action.Equals("ReCreateWhenDeletedChangeToPendingCreate"));
             foreach (var opening in openingReCreate) {
                 var element = await _repository.Element.FindByCondition(x => x.Id.Equals(opening.Id)).FirstOrDefaultAsync();
                 element.Status = "Normal";

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Contracts;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OpeningServer.DTO;
+using OpeningServer.Helper;
 
 namespace OpeningServer.Controllers
 {
@@ -12,19 +15,20 @@ namespace OpeningServer.Controllers
     [ApiController]
     public class SyncRevitClinetController : ControllerBase
     {
-        public async Task<IActionResult> GetOpeningsOnDrawing(string drawingName)
+        private IRepositoryWrapper _repository;
+
+        public SyncRevitClinetController(IRepositoryWrapper repository)
         {
-            try {
-                return Ok();
-            }
-            catch (Exception) {
-                throw;
-            }
+            _repository = repository;
         }
 
-        public async Task<IActionResult> SyncDataOfLocal([FromBody]LocalDataModel localDataModel)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SyncDataOfLocalAsync([FromBody]LocalDataModelDTO<ElementGetDTO> localDataModel)
         {
             try {
+                IUpdatingData updatingFromLocal = new ManagerUpdate(localDataModel, _repository);
+                updatingFromLocal.ImplementUpdate();
+                await _repository.SaveChangesAsync();
                 return Ok();
             }
             catch (Exception) {

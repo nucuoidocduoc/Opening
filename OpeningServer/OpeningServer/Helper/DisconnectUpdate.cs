@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using OpeningServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace OpeningServer.Helper
 {
     public class DisconnectUpdate : Updating, IDisconnect
     {
-        public DisconnectUpdate(LocalDataModel localDataModel, Guid drawingId, IRepositoryWrapper repository)
+        public DisconnectUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, Guid drawingId, IRepositoryWrapper repository)
             : base(localDataModel, drawingId, repository)
         {
         }

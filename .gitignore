@@ -110,3 +110,5 @@
 /OpeningServer/OpeningServer/bin/Debug/netcoreapp2.2/Repository.pdb
 /OpeningServer/OpeningServer/obj/OpeningServer.csproj.nuget.dgspec.json
 /OpeningServer/.vs/config
+/OpeningServer/Repository/bin/Debug/netcoreapp2.2/Microsoft.AspNetCore.Mvc.Abstractions.dll
+/OpeningServer/Repository/bin/Debug/netcoreapp2.2/Microsoft.AspNetCore.Mvc.Abstractions.xml

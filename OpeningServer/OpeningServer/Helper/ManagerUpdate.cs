@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using OpeningServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace OpeningServer.Helper
 {
     public class ManagerUpdate : IUpdatingData
     {
-        private LocalDataModel _localDataModel;
+        private LocalDataModelDTO<ElementGetDTO> _localDataModel;
         private IRepositoryWrapper _repository;
         private Guid _idDrawing;
         private IUpdatingData _create;
@@ -18,7 +19,7 @@ namespace OpeningServer.Helper
         private IUpdatingData _edit;
         private IDisconnect _disconnect;
 
-        public ManagerUpdate(LocalDataModel localDataModel, IRepositoryWrapper repository)
+        public ManagerUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, IRepositoryWrapper repository)
         {
             _localDataModel = localDataModel;
             _repository = repository;

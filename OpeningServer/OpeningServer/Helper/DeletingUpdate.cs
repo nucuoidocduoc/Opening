@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using OpeningServer.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace OpeningServer.Helper
 {
     public class DeletingUpdate : Updating, IUpdatingData
     {
-        public DeletingUpdate(LocalDataModel localDataModel, Guid drawingId, IRepositoryWrapper repository)
+        public DeletingUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, Guid drawingId, IRepositoryWrapper repository)
                 : base(localDataModel, drawingId, repository)
         {
         }
