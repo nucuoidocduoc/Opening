@@ -7,6 +7,8 @@ namespace OpeningServer.DTO
 {
     public class ElementGetDTO : ElementSendDTO
     {
-        public string Action { get; set; }
+        public Action Action { get; set; }
+        public Status LocalStatus { get; set; }
+        public bool DifferenceGeometry { get; set; }
     }
 }

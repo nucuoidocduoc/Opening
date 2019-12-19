@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Entities.Models;
 using OpeningServer.DTO;
+using OpeningServer.Helper.Cluster;
 using System;
 using System.Collections.Generic;
 using System.Linq;

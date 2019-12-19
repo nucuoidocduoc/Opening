@@ -14,30 +14,16 @@ namespace OpeningServer.Helper
         private LocalDataModelDTO<ElementGetDTO> _localDataModel;
         private IRepositoryWrapper _repository;
         private Guid _idDrawing;
-        private IUpdatingData _create;
-        private IUpdatingData _delete;
-        private IUpdatingData _edit;
-        private IDisconnect _disconnect;
 
         public ManagerUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, IRepositoryWrapper repository)
         {
             _localDataModel = localDataModel;
             _repository = repository;
             _idDrawing = _repository.Drawing.FindByCondition(x => x.Name.Equals(_localDataModel.DrawingName)).FirstOrDefault().Id;
-            _create = new CreatingUpdate(_localDataModel, _idDrawing, _repository);
-            _edit = new EditingUpdate(_localDataModel, _idDrawing, _repository);
-            _delete = new DeletingUpdate(_localDataModel, _idDrawing, _repository);
-            _disconnect = new DisconnectUpdate(_localDataModel, _idDrawing, _repository);
         }
 
         public void ImplementUpdate()
         {
-            _disconnect.ImplementDisconnect();
-            _create.ImplementUpdate();
-            _edit.ImplementUpdate();
-            _delete.ImplementUpdate();
-            RevisionUpdateAsync();
-            _repository.SaveChangesAsync();
         }
 
         private void RevisionUpdateAsync()
