@@ -12,5 +12,6 @@ namespace OpeningServer.Helper
         public const string PENDING_CREATE = "PendingCreate";
         public const string NORMAL = "Normal";
         public const string DELETING = "Deleting";
+        public const string NONE = "None";
     }
 }

@@ -8,45 +8,52 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class NormalStatusProcessing<T> : BaseData<T>, IProcess
+    public class NormalStatusProcessing : BaseData, IProcess
     {
-        public void ImplementProcess()
+        public Func<Type> TargetType { get; set; }
+
+        public async Task<bool> ImplementProcess()
         {
             ImplementNormalLocal();
-            ImplementDeletedLocal();
+            await ImplementDeletedLocal();
+            return true;
         }
 
-        public void ImplementNormalLocal()
+        public async Task<bool> ImplementNormalLocal()
         {
             if (NormalLocalSet == null || NormalLocalSet.Count() <= 0) {
-                return;
+                return true;
             }
-            if (typeof(T).Equals(typeof(LocalPushUpdating))) {
+            if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var element in NormalLocalSet) {
                     // Tao geometry
-                    UpdateProcessing.UpdateElementGeometryLocalToServer(element, _repository);
+                    UpdateProcessing.CreateNewGeometryVersion(element, _repository);
                 }
             }
+            return true;
         }
 
-        public void ImplementDeletedLocal()
+        public async Task<bool> ImplementDeletedLocal()
         {
             if (DeletedLocalSet == null || DeletedLocalSet.Count() <= 0) {
-                return;
+                return true;
             }
-            if (typeof(T).Equals(typeof(LocalPushUpdating))) {
+            var tasks = new List<Task<bool>>();
+            if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var elementGetDTO in DeletedLocalSet) {
-                    UpdateProcessing.UpdateElementDeletedLocalToServerAsync(elementGetDTO, _repository);
+                    tasks.Add(UpdateProcessing.UpdateWhenStatusOfElementChangeToDeletedAsync(elementGetDTO, _repository));
                 }
             }
             else {
                 foreach (var elementGetDTO in DeletedLocalSet) {
-                    UpdateProcessing.UpdateElementStatusWithRecreateLocalAsync(elementGetDTO, _repository, Define.NORMAL);
+                    tasks.Add(UpdateProcessing.ReGenerateElementBelowLocalAsync(elementGetDTO, _repository));
                 }
             }
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public void ImplementNoneLocal()
+        public Task<bool> ImplementNoneLocal()
         {
             throw new NotImplementedException();
         }

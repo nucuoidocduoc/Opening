@@ -7,36 +7,41 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class PendingCreateStatusProcessing<T> : BaseData<T>, IProcess
+    public class PendingCreateStatusProcessing : BaseData, IProcess
     {
-        public void ImplementProcess()
+        public Func<Type> TargetType { get; set; }
+
+        public async Task<bool> ImplementProcess()
         {
             if (_data == null || _data.Count() <= 0) {
-                return;
+                return true;
             }
-            if (typeof(T).Equals(typeof(LocalPushUpdating))) {
+            var tasks = new List<Task<bool>>();
+            if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var element in _data) {
-                    UpdateProcessing.UpdateElementDeletedLocalToServerAsync(element, _repository);
+                    tasks.Add(UpdateProcessing.UpdateWhenStatusOfElementChangeToDeletedAsync(element, _repository));
                 }
             }
             else {
                 foreach (var element in _data) {
-                    UpdateProcessing.UpdateElementStatusWithRecreateLocalAsync(element, _repository, Define.NORMAL);
+                    tasks.Add(UpdateProcessing.ReGenerateElementBelowLocalAsync(element, _repository));
                 }
             }
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public void ImplementNormalLocal()
+        public Task<bool> ImplementNormalLocal()
         {
             throw new NotImplementedException();
         }
 
-        public void ImplementDeletedLocal()
+        public Task<bool> ImplementDeletedLocal()
         {
             throw new NotImplementedException();
         }
 
-        public void ImplementNoneLocal()
+        public Task<bool> ImplementNoneLocal()
         {
             throw new NotImplementedException();
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public abstract class BaseData<T> : IClustingStatus<ElementGetDTO>
+    public abstract class BaseData : IClustingStatus<ElementGetDTO>
     {
         protected IEnumerable<ElementGetDTO> _data;
         protected Guid _idDrawing;
@@ -19,8 +19,6 @@ namespace OpeningServer.Helper.Cluster
             _idDrawing = drawingId;
             _repository = repository;
         }
-
-        public Type Type { get => typeof(T); }
 
         private IEnumerable<ElementGetDTO> _normalLocalSet;
         private IEnumerable<ElementGetDTO> _deletedLocalSet;

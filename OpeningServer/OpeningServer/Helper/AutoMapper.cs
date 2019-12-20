@@ -36,7 +36,7 @@ namespace OpeningServer.Helper
                 IdManager = element.IdManager,
                 IdRevitElement = element.IdRevitElement,
                 Geometry = element.ElementManagement.GeometryVersions.OrderBy(x => x.CreatedDate).FirstOrDefault().GeometryVersionToGeometryDTO(),
-                Status = element.Status
+                ServerStatus = element.Status
             };
         }
 

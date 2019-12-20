@@ -2,6 +2,7 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using OpeningServer.DTO;
+using OpeningServer.Helper.Cluster;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace OpeningServer.Helper
         private LocalDataModelDTO<ElementGetDTO> _localDataModel;
         private IRepositoryWrapper _repository;
         private Guid _idDrawing;
+        private IUpdatingData _localPullUpdate;
+        private IUpdatingData _localPushUpdate;
 
         public ManagerUpdate(LocalDataModelDTO<ElementGetDTO> localDataModel, IRepositoryWrapper repository)
         {
@@ -22,28 +25,25 @@ namespace OpeningServer.Helper
             _idDrawing = _repository.Drawing.FindByCondition(x => x.Name.Equals(_localDataModel.DrawingName)).FirstOrDefault().Id;
         }
 
-        public void ImplementUpdate()
+        public async Task<bool> ImplementUpdateAsync()
         {
-        }
-
-        private void RevisionUpdateAsync()
-        {
-            Revision revision = new Revision() { Id = new Guid(), IdDrawing = _idDrawing, CreatedDate = DateTime.Now };
-            _repository.Revision.Add(revision);
-
-            var elementsInDrawing = _repository.Element.FindByCondition(e => e.IdDrawing.Equals(_idDrawing) &&
-            (e.Status.Equals("Normal") || e.Status.Equals("PendingCreate")))
-            .Include(m => m.ElementManagement)
-            .ThenInclude(x => x.GeometryVersions);
-
-            foreach (var ele in elementsInDrawing) {
-                CheckoutVersion checkoutVersion = new CheckoutVersion() {
-                    Id = new Guid(),
-                    IdGeometryVersion = ele.ElementManagement.GeometryVersions.FirstOrDefault().Id,
-                    IdRevision = revision.Id
-                };
-                _repository.CheckoutVersion.Add(checkoutVersion);
+            if (_localDataModel.OpeningsLocalPullAction != null && _localDataModel.OpeningsLocalPullAction.Count() > 0) {
+                _localPullUpdate = new LocalPullUpdating(_localDataModel.OpeningsLocalPullAction, _idDrawing, _repository);
             }
+            if (_localDataModel.OpeningsLocalPushAction != null && _localDataModel.OpeningsLocalPushAction.Count() > 0) {
+                _localPushUpdate = new LocalPushUpdating(_localDataModel.OpeningsLocalPushAction, _idDrawing, _repository);
+            }
+            var tasks = new List<Task<bool>>();
+
+            if (_localPushUpdate != null) {
+                tasks.Add(_localPushUpdate.ImplementUpdateAsync());
+            }
+            if (_localPullUpdate != null) {
+                tasks.Add(_localPullUpdate.ImplementUpdateAsync());
+            }
+            await Task.WhenAll(tasks);
+            await UpdateProcessing.CreateRevisionAsync(_repository, _idDrawing);
+            return true;
         }
     }
 }

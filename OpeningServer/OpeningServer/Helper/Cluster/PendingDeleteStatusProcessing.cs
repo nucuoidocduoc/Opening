@@ -7,43 +7,53 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class PendingDeleteStatusProcessing<T> : BaseData<T>, IProcess
+    public class PendingDeleteStatusProcessing : BaseData, IProcess
     {
-        public void ImplementProcess()
+        public Func<Type> TargetType { get; set; }
+
+        public async Task<bool> ImplementProcess()
         {
-            ImplementNormalLocal();
-            ImplementDeletedLocal();
+            var tasks = new List<Task<bool>>();
+            tasks.Add(ImplementNormalLocal());
+            tasks.Add(ImplementDeletedLocal());
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public void ImplementNormalLocal()
+        public async Task<bool> ImplementNormalLocal()
         {
             if (NormalLocalSet == null || NormalLocalSet.Count() <= 0) {
-                return;
+                return true;
             }
-            if (typeof(T).Equals(typeof(LocalPushUpdating))) {
+            var tasks = new List<Task<bool>>();
+            if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var element in DeletedLocalSet) {
-                    UpdateProcessing.UpdateElementRecreateOnServerAsync(element, _repository);
+                    tasks.Add(UpdateProcessing.StatusChangeFromPendingDeleteToNormalAsync(element, _repository));
                 }
             }
             else {
                 foreach (var element in DeletedLocalSet) {
-                    UpdateProcessing.UpdateElementStatusWithDeletedLocalAndServerWithAsync(element, _repository, Define.DELETED);
+                    tasks.Add(UpdateProcessing.StatusChangeFromPendingDeleteToDeletedAsync(element, _repository));
                 }
             }
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public void ImplementDeletedLocal()
+        public async Task<bool> ImplementDeletedLocal()
         {
             if (DeletedLocalSet == null || DeletedLocalSet.Count() <= 0) {
-                return;
+                return true;
             }
-
+            var tasks = new List<Task<bool>>();
             foreach (var element in DeletedLocalSet) {
-                UpdateProcessing.UpdateElementStatusWithDeletedLocalAndServerWithAsync(element, _repository, Define.DELETED);
+                tasks.Add(UpdateProcessing.StatusChangeFromPendingDeleteToDeletedAsync(element, _repository));
             }
+            await Task.WhenAll(tasks);
+            return true;
         }
 
-        public void ImplementNoneLocal()
+        public Task<bool> ImplementNoneLocal()
         {
             throw new NotImplementedException();
         }

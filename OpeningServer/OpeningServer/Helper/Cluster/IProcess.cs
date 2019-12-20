@@ -7,12 +7,12 @@ namespace OpeningServer.Helper.Cluster
 {
     public interface IProcess
     {
-        void ImplementProcess();
+        Task<bool> ImplementProcess();
 
-        void ImplementNormalLocal();
+        Task<bool> ImplementNormalLocal();
 
-        void ImplementDeletedLocal();
+        Task<bool> ImplementDeletedLocal();
 
-        void ImplementNoneLocal();
+        Task<bool> ImplementNoneLocal();
     }
 }

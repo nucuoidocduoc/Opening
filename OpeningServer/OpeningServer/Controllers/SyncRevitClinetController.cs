@@ -27,7 +27,7 @@ namespace OpeningServer.Controllers
         {
             try {
                 IUpdatingData updatingFromLocal = new ManagerUpdate(localDataModel, _repository);
-                updatingFromLocal.ImplementUpdate();
+                await updatingFromLocal.ImplementUpdateAsync();
                 await _repository.SaveChangesAsync();
                 return Ok();
             }

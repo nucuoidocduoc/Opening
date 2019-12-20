@@ -11,6 +11,15 @@ namespace OpeningServer.Helper.Cluster
 {
     public static class UpdateProcessing
     {
+        /// <summary>
+        /// Use when one element be created on local and push it to server
+        /// Create manager
+        /// Create Element with idManager is id of manager just create above, idRevit is id of revit element below local
+        /// Create geometry with idManager is id of manager just create above
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        /// <param name="idDrawing"></param>
         public static void CreateElement(ElementGetDTO elementGetDTO, IRepositoryWrapper repository, Guid idDrawing)
         {
             // can tao manager truoc
@@ -49,6 +58,13 @@ namespace OpeningServer.Helper.Cluster
             repository.GeometryVersion.Add(geometryVersion);
         }
 
+        /// <summary>
+        /// use when add a element no exist on current drawing but exist on other drawing to this drawing
+        /// Create element and set idManager=manager, idRevit=id of revit below local
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        /// <param name="idDrawing"></param>
         public static void CreateElementFromStack(ElementGetDTO elementGetDTO, IRepositoryWrapper repository, Guid idDrawing)
         {
             // Tao Element
@@ -62,27 +78,51 @@ namespace OpeningServer.Helper.Cluster
             };
         }
 
-        public async static void UpdateElementStatusWithRecreateLocalAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository, string status)
+        /// <summary>
+        /// Use when status on server is pending create or normal and below local we regenerate element
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        public async static Task<bool> ReGenerateElementBelowLocalAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             var element = await repository.Element.FindByCondition(x => x.Id.Equals(elementGetDTO.Id)).FirstOrDefaultAsync();
-            element.Status = status;
+            element.Status = Define.NORMAL;
             element.IdRevitElement = elementGetDTO.IdRevitElement;
             repository.Element.Update(element);
+            return true;
         }
 
-        public async static void UpdateElementStatusWithDeletedLocalAndServerWithAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository, string status)
+        /// <summary>
+        /// Use when status of element of current drawing is pending delete change to deleted
+        /// Change status of element to Deleted
+        /// Change status of manager to Deleted if all status of other drawing is deleted.
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        /// <param name="status"></param>
+        public async static Task<bool> StatusChangeFromPendingDeleteToDeletedAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             var element = await repository.Element.FindByCondition(x => x.Id.Equals(elementGetDTO.Id)).FirstOrDefaultAsync();
-            element.Status = status;
+            element.Status = Define.DELETED;
             repository.Element.Update(element);
 
             // tim manager
             var manager = await repository.ElementManagement.FindByCondition(m => m.Id.Equals(elementGetDTO.IdManager)).FirstOrDefaultAsync();
             manager.Status = await IsDeletedAll(manager.Id, repository) ? Define.DELETED : Define.DELETING;
             repository.ElementManagement.Update(manager);
+            return true;
         }
 
-        public static async void UpdateElementDeletedLocalToServerAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
+        /// <summary>
+        /// Logic up date when Status of element on server is changed to deleted
+        /// Change status of element of other drawing to : Normal->PendingDelete, PendingCreate->Deleted
+        /// Change status of element of current drawing to: Deleted
+        /// Change IdRevitElement to Guid.empty
+        /// Change Status of manager to Deleting or Deleted (if all status of elements are deleted)
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        public static async Task<bool> UpdateWhenStatusOfElementChangeToDeletedAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             // tim manager
             var manager = await repository.ElementManagement.FindByCondition(m => m.Id.Equals(elementGetDTO.IdManager)).FirstOrDefaultAsync();
@@ -102,15 +142,21 @@ namespace OpeningServer.Helper.Cluster
                     ele.Status = Define.PENDING_DELETE;
                 }
                 else if (ele.Status.Equals(Define.PENDING_CREATE)) {
-                    ele.Status = Define.PENDING_DELETE;
+                    ele.Status = Define.DELETED;
                 }
                 repository.Element.Update(ele);
             }
             manager.Status = await IsDeletedAll(manager.Id, repository) ? Define.DELETED : Define.DELETING;
             repository.ElementManagement.Update(manager);
+            return true;
         }
 
-        public static void UpdateElementGeometryLocalToServer(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
+        /// <summary>
+        /// Create new geometry to do perform geometry be edited below local and push to server.
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        public static void CreateNewGeometryVersion(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             // Tao geometry
 
@@ -128,11 +174,20 @@ namespace OpeningServer.Helper.Cluster
             repository.GeometryVersion.Add(geometryVersion);
         }
 
-        public async static void UpdateElementRecreateOnServerAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
+        /// <summary>
+        /// Use when status of element of current drawing on server change from pending delete to normal
+        /// Change status of element of other drawing : PendingDelete->Normal, Deleted->PendingCreate
+        /// Change status of element of current drawing to: Normal
+        /// Change IdRevitElement to id of revit element below local
+        /// Change Status of manager to normal
+        /// </summary>
+        /// <param name="elementGetDTO"></param>
+        /// <param name="repository"></param>
+        public async static Task<bool> StatusChangeFromPendingDeleteToNormalAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             // tim manager
             var manager = await repository.ElementManagement.FindByCondition(m => m.Id.Equals(elementGetDTO.IdManager)).FirstOrDefaultAsync();
-
+            manager.Status = Define.NORMAL;
             // tim tat cac cac thuc the manager da phan phoi
             var elements = await repository.Element.FindByCondition(e => e.IdManager.Equals(manager.Id)).ToListAsync();
             foreach (var ele in elements) {
@@ -152,14 +207,42 @@ namespace OpeningServer.Helper.Cluster
                 }
                 repository.Element.Update(ele);
             }
-            manager.Status = Define.NORMAL;
+
             repository.ElementManagement.Update(manager);
 
             if (elementGetDTO.DifferenceGeometry) {
-                UpdateElementGeometryLocalToServer(elementGetDTO, repository);
+                CreateNewGeometryVersion(elementGetDTO, repository);
             }
+            return true;
         }
 
+        public async static Task<bool> CreateRevisionAsync(IRepositoryWrapper repository, Guid idDrawing)
+        {
+            Revision revision = new Revision() { Id = new Guid(), IdDrawing = idDrawing, CreatedDate = DateTime.Now };
+            repository.Revision.Add(revision);
+
+            var elementsInDrawing = await repository.Element.FindByCondition(e => e.IdDrawing.Equals(idDrawing) &&
+            (e.Status.Equals(Define.NORMAL) || e.Status.Equals(Define.PENDING_CREATE)))
+            .Include(m => m.ElementManagement)
+            .ThenInclude(x => x.GeometryVersions).ToListAsync();
+
+            foreach (var ele in elementsInDrawing) {
+                CheckoutVersion checkoutVersion = new CheckoutVersion() {
+                    Id = new Guid(),
+                    IdGeometryVersion = ele.ElementManagement.GeometryVersions.FirstOrDefault().Id,
+                    IdRevision = revision.Id
+                };
+                repository.CheckoutVersion.Add(checkoutVersion);
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// User to check all status of elements on drawings are deleted
+        /// </summary>
+        /// <param name="idManager"></param>
+        /// <param name="repository"></param>
+        /// <returns>true if all status are deleted</returns>
         public static async Task<bool> IsDeletedAll(Guid idManager, IRepositoryWrapper repository)
         {
             var elements = await repository.Element.FindByCondition(e => e.IdManager.Equals(idManager)).ToListAsync();

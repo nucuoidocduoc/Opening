@@ -11,8 +11,7 @@ namespace OpeningServer.DTO
         public Guid Id { get; set; }
         public Guid IdManager { get; set; }
         public Guid IdRevitElement { get; set; }
-        public string Status { get; set; }
-        public Status ServerStatus { get; set; }
+        public string ServerStatus { get; set; }
         public GeometryDTO Geometry { get; set; }
     }
 }
