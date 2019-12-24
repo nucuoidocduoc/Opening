@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    [Table("GeometryVersion")]
+    [Table("geometryversion")]
     public class GeometryVersion
     {
         public Guid Id { get; set; }
@@ -15,7 +15,8 @@ namespace Entities.Models
         public string Original { get; set; }
         public string Version { get; set; }
         public DateTime CreatedDate { get; set; }
-        public Guid IdUserEdited { get; set; }
+
+        //public Guid IdUserEdited { get; set; }
         public string Status { get; set; }
 
         [ForeignKey(nameof(IdManager))]

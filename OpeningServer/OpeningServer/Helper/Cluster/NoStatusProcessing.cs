@@ -7,28 +7,26 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class NoStatusProcessing : BaseData, IProcess
+    public class NoStatusProcessing : BaseData
     {
         public Func<Type> TargetType { get; set; }
 
-        public async Task<bool> ImplementProcess()
+        public void ImplementProcess()
         {
             ImplementNormalLocal();
             ImplementNoneLocal();
-            return true;
         }
 
-        public async Task<bool> ImplementNormalLocal()
+        public void ImplementNormalLocal()
         {
             if (NormalLocalSet == null || NormalLocalSet.Count() <= 0) {
-                return true;
+                return;
             }
             if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var element in NormalLocalSet) {
                     UpdateProcessing.CreateElement(element, _repository, _idDrawing);
                 }
             }
-            return true;
         }
 
         public Task<bool> ImplementDeletedLocal()
@@ -36,17 +34,16 @@ namespace OpeningServer.Helper.Cluster
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ImplementNoneLocal()
+        public void ImplementNoneLocal()
         {
-            if (NormalLocalSet == null || NormalLocalSet.Count() <= 0) {
-                return true;
+            if (NoneLocalSet == null || NoneLocalSet.Count() <= 0) {
+                return;
             }
             if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
-                foreach (var element in NormalLocalSet) {
+                foreach (var element in NoneLocalSet) {
                     UpdateProcessing.CreateElementFromStack(element, _repository, _idDrawing);
                 }
             }
-            return true;
         }
 
         public NoStatusProcessing(IEnumerable<ElementGetDTO> data, IRepositoryWrapper repository, Guid drawingId) : base(data, repository, drawingId)

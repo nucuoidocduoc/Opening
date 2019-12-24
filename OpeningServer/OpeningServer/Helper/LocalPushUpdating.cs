@@ -32,7 +32,7 @@ namespace OpeningServer.Helper
             }
 
             if (_noStatusServer != null) {
-                tasks.Add(_noStatusServer.ImplementProcess());
+                _noStatusServer.ImplementProcess();
             }
             await Task.WhenAll(tasks);
             return true;

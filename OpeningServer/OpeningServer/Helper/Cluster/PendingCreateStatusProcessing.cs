@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class PendingCreateStatusProcessing : BaseData, IProcess
+    public class PendingCreateStatusProcessing : BaseData
     {
         public Func<Type> TargetType { get; set; }
 
@@ -29,21 +29,6 @@ namespace OpeningServer.Helper.Cluster
             }
             await Task.WhenAll(tasks);
             return true;
-        }
-
-        public Task<bool> ImplementNormalLocal()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ImplementDeletedLocal()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ImplementNoneLocal()
-        {
-            throw new NotImplementedException();
         }
 
         public PendingCreateStatusProcessing(IEnumerable<ElementGetDTO> data, IRepositoryWrapper repository, Guid drawingId) : base(data, repository, drawingId)

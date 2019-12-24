@@ -32,26 +32,30 @@ namespace OpeningServer.Helper
             if (_elements.Count() > 0) {
                 var elementsNormal = _elements.Where(x => x.ServerStatus.Equals(Define.NORMAL));
                 if (elementsNormal != null && elementsNormal.Count() > 0) {
-                    _normalServer = new NormalStatusProcessing(elementsNormal, _repository, _drawingId);
-                    _normalServer.TargetType = () => type;
+                    _normalServer = new NormalStatusProcessing(elementsNormal, _repository, _drawingId) {
+                        TargetType = () => type
+                    };
                 }
 
                 var elementsPendingDelete = _elements.Where(x => x.ServerStatus.Equals(Define.PENDING_DELETE));
                 if (elementsPendingDelete != null && elementsPendingDelete.Count() > 0) {
-                    _pendingDeleteServer = new PendingDeleteStatusProcessing(elementsPendingDelete, _repository, _drawingId);
-                    _pendingDeleteServer.TargetType = () => type;
+                    _pendingDeleteServer = new PendingDeleteStatusProcessing(elementsPendingDelete, _repository, _drawingId) {
+                        TargetType = () => type
+                    };
                 }
 
                 var elementsPendingCreate = _elements.Where(x => x.ServerStatus.Equals(Define.PENDING_CREATE));
                 if (elementsPendingCreate != null && elementsPendingCreate.Count() > 0) {
-                    _pendingCreateServer = new PendingCreateStatusProcessing(elementsPendingCreate, _repository, _drawingId);
-                    _pendingCreateServer.TargetType = () => type;
+                    _pendingCreateServer = new PendingCreateStatusProcessing(elementsPendingCreate, _repository, _drawingId) {
+                        TargetType = () => type
+                    };
                 }
 
-                var elementsNoStatus = _elements.Where(x => x.ServerStatus.Equals(string.Empty));
+                var elementsNoStatus = _elements.Where(x => x.ServerStatus.Equals(Define.NONE));
                 if (elementsNoStatus != null && elementsNoStatus.Count() > 0) {
-                    _noStatusServer = new NoStatusProcessing(elementsNoStatus, _repository, _drawingId);
-                    _noStatusServer.TargetType = () => type;
+                    _noStatusServer = new NoStatusProcessing(elementsNoStatus, _repository, _drawingId) {
+                        TargetType = () => type
+                    };
                 }
             }
         }

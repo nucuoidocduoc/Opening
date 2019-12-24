@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class NormalStatusProcessing : BaseData, IProcess
+    public class NormalStatusProcessing : BaseData
     {
         public Func<Type> TargetType { get; set; }
 
@@ -19,10 +19,10 @@ namespace OpeningServer.Helper.Cluster
             return true;
         }
 
-        public async Task<bool> ImplementNormalLocal()
+        public void ImplementNormalLocal()
         {
             if (NormalLocalSet == null || NormalLocalSet.Count() <= 0) {
-                return true;
+                return;
             }
             if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
                 foreach (var element in NormalLocalSet) {
@@ -30,7 +30,6 @@ namespace OpeningServer.Helper.Cluster
                     UpdateProcessing.CreateNewGeometryVersion(element, _repository);
                 }
             }
-            return true;
         }
 
         public async Task<bool> ImplementDeletedLocal()
@@ -51,11 +50,6 @@ namespace OpeningServer.Helper.Cluster
             }
             await Task.WhenAll(tasks);
             return true;
-        }
-
-        public Task<bool> ImplementNoneLocal()
-        {
-            throw new NotImplementedException();
         }
 
         public NormalStatusProcessing(IEnumerable<ElementGetDTO> data, IRepositoryWrapper repository, Guid drawingId) : base(data, repository, drawingId)

@@ -29,5 +29,10 @@ namespace Repository
                 .ThenInclude(m => m.GeometryVersions).ToListAsync();
             return elements;
         }
+
+        //public async Task<IEnumerable<Element>> GetAllElementIncludeElementJustAdd()
+        //{
+        //    var elements=await RepositoryContext.ChangeTracker.Entries<Element>()
+        //}
     }
 }

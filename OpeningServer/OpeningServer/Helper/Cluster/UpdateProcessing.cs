@@ -24,7 +24,7 @@ namespace OpeningServer.Helper.Cluster
         {
             // can tao manager truoc
             ElementManagement elementManagement = new ElementManagement() {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 Status = Define.NORMAL
             };
@@ -32,7 +32,7 @@ namespace OpeningServer.Helper.Cluster
             // Tao geometry
 
             GeometryVersion geometryVersion = new GeometryVersion() {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 IdManager = elementManagement.Id,
                 Geometry = elementGetDTO.Geometry.Geometry,
                 Direction = elementGetDTO.Geometry.Direction,
@@ -40,13 +40,13 @@ namespace OpeningServer.Helper.Cluster
                 Version = string.Empty,
                 CreatedDate = elementManagement.CreatedDate,
                 Status = string.Empty,
-                IdUserEdited = Guid.Empty
+                //IdUserEdited = Guid.Empty
             };
 
             // Tao Element
 
             Element element = new Element() {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 IdManager = elementManagement.Id,
                 IdDrawing = idDrawing,
                 IdRevitElement = elementGetDTO.IdRevitElement,
@@ -70,12 +70,13 @@ namespace OpeningServer.Helper.Cluster
             // Tao Element
 
             Element element = new Element() {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 IdManager = elementGetDTO.IdManager,
                 IdDrawing = idDrawing,
                 IdRevitElement = elementGetDTO.IdRevitElement,
                 Status = Define.NORMAL
             };
+            repository.Element.Add(element);
         }
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace OpeningServer.Helper.Cluster
         public async static Task<bool> StatusChangeFromPendingDeleteToDeletedAsync(ElementGetDTO elementGetDTO, IRepositoryWrapper repository)
         {
             var element = await repository.Element.FindByCondition(x => x.Id.Equals(elementGetDTO.Id)).FirstOrDefaultAsync();
+            element.IdRevitElement = Guid.Empty;
             element.Status = Define.DELETED;
             repository.Element.Update(element);
 
@@ -161,7 +163,7 @@ namespace OpeningServer.Helper.Cluster
             // Tao geometry
 
             GeometryVersion geometryVersion = new GeometryVersion() {
-                Id = new Guid(),
+                Id = Guid.NewGuid(),
                 IdManager = elementGetDTO.IdManager,
                 Geometry = elementGetDTO.Geometry.Geometry,
                 Direction = elementGetDTO.Geometry.Direction,
@@ -169,7 +171,7 @@ namespace OpeningServer.Helper.Cluster
                 Version = string.Empty,
                 CreatedDate = DateTime.Now,
                 Status = string.Empty,
-                IdUserEdited = Guid.Empty
+                //IdUserEdited = Guid.Empty
             };
             repository.GeometryVersion.Add(geometryVersion);
         }
@@ -218,9 +220,10 @@ namespace OpeningServer.Helper.Cluster
 
         public async static Task<bool> CreateRevisionAsync(IRepositoryWrapper repository, Guid idDrawing)
         {
-            Revision revision = new Revision() { Id = new Guid(), IdDrawing = idDrawing, CreatedDate = DateTime.Now };
+            Revision revision = new Revision() { Id = Guid.NewGuid(), IdDrawing = idDrawing, CreatedDate = DateTime.Now };
             repository.Revision.Add(revision);
-
+            var elechecks = repository.Element.FindAll().ToList();
+            var manages = repository.ElementManagement.FindAll().ToList();
             var elementsInDrawing = await repository.Element.FindByCondition(e => e.IdDrawing.Equals(idDrawing) &&
             (e.Status.Equals(Define.NORMAL) || e.Status.Equals(Define.PENDING_CREATE)))
             .Include(m => m.ElementManagement)
@@ -228,7 +231,7 @@ namespace OpeningServer.Helper.Cluster
 
             foreach (var ele in elementsInDrawing) {
                 CheckoutVersion checkoutVersion = new CheckoutVersion() {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     IdGeometryVersion = ele.ElementManagement.GeometryVersions.FirstOrDefault().Id,
                     IdRevision = revision.Id
                 };

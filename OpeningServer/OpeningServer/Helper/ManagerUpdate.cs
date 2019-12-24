@@ -42,6 +42,8 @@ namespace OpeningServer.Helper
                 tasks.Add(_localPullUpdate.ImplementUpdateAsync());
             }
             await Task.WhenAll(tasks);
+            await _repository.SaveChangesAsync();
+            //_repository.CommitTransaction();
             await UpdateProcessing.CreateRevisionAsync(_repository, _idDrawing);
             return true;
         }

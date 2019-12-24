@@ -2,6 +2,7 @@
 using Entities;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,6 +43,21 @@ namespace Repository
         public async Task SaveChangesAsync()
         {
             await _repositoryContext.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        public async Task<IDbContextTransaction> StartTransaction()
+        {
+            return await _repositoryContext.Database.BeginTransactionAsync();
+        }
+
+        public void CommitTransaction()
+        {
+            _repositoryContext.Database.CommitTransaction();
+        }
+
+        public void RollbackTransaction()
+        {
+            _repositoryContext.Database.RollbackTransaction();
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Entities
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Drawing> Drawings { get; set; }
-        //public DbSet<Element> Elements { get; set; }
-        //public DbSet<ElementManagement> ElementManagements { get; set; }
-        //public DbSet<GeometryVersion> GeometryVersions { get; set; }
-        //public DbSet<Revision> Revisions { get; set; }
-        //public DbSet<CheckoutVersion> CheckoutVersions { get; set; }
+        public DbSet<Element> Elements { get; set; }
+        public DbSet<ElementManagement> ElementManagements { get; set; }
+        public DbSet<GeometryVersion> GeometryVersions { get; set; }
+        public DbSet<Revision> Revisions { get; set; }
+        public DbSet<CheckoutVersion> CheckoutVersions { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,5 +18,11 @@ namespace Contracts
         IRevisionRepository Revision { get; }
 
         Task SaveChangesAsync();
+
+        Task<IDbContextTransaction> StartTransaction();
+
+        void CommitTransaction();
+
+        void RollbackTransaction();
     }
 }

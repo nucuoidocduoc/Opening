@@ -29,7 +29,7 @@ namespace OpeningServer.Helper.Cluster
             get
             {
                 if (_normalLocalSet == null) {
-                    _normalLocalSet = _data.Where(e => e.LocalStatus.Equals(Status.NORMAL));
+                    _normalLocalSet = _data.Where(e => e.LocalStatus.Equals(Define.NORMAL));
                 }
                 return _normalLocalSet;
             }
@@ -40,7 +40,7 @@ namespace OpeningServer.Helper.Cluster
             get
             {
                 if (_deletedLocalSet == null) {
-                    _deletedLocalSet = _data.Where(e => e.LocalStatus.Equals(Status.DELETED));
+                    _deletedLocalSet = _data.Where(e => e.LocalStatus.Equals(Define.DELETED));
                 }
                 return _deletedLocalSet;
             }
@@ -51,7 +51,7 @@ namespace OpeningServer.Helper.Cluster
             get
             {
                 if (_nondeLocalSet == null) {
-                    _nondeLocalSet = _data.Where(e => e.LocalStatus.Equals(Status.NONE));
+                    _nondeLocalSet = _data.Where(e => e.LocalStatus.Equals(Define.NONE));
                 }
                 return _nondeLocalSet;
             }

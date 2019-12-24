@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Entities.Models
 {
-    [Table("CheckoutVersion")]
+    [Table("checkoutversion")]
     public class CheckoutVersion
     {
         public Guid Id { get; set; }

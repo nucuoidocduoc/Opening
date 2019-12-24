@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OpeningServer.Helper.Cluster
 {
-    public class PendingDeleteStatusProcessing : BaseData, IProcess
+    public class PendingDeleteStatusProcessing : BaseData
     {
         public Func<Type> TargetType { get; set; }
 
@@ -27,12 +27,12 @@ namespace OpeningServer.Helper.Cluster
             }
             var tasks = new List<Task<bool>>();
             if (TargetType.Invoke().Equals(typeof(LocalPushUpdating))) {
-                foreach (var element in DeletedLocalSet) {
+                foreach (var element in NormalLocalSet) {
                     tasks.Add(UpdateProcessing.StatusChangeFromPendingDeleteToNormalAsync(element, _repository));
                 }
             }
             else {
-                foreach (var element in DeletedLocalSet) {
+                foreach (var element in NormalLocalSet) {
                     tasks.Add(UpdateProcessing.StatusChangeFromPendingDeleteToDeletedAsync(element, _repository));
                 }
             }
@@ -51,11 +51,6 @@ namespace OpeningServer.Helper.Cluster
             }
             await Task.WhenAll(tasks);
             return true;
-        }
-
-        public Task<bool> ImplementNoneLocal()
-        {
-            throw new NotImplementedException();
         }
 
         public PendingDeleteStatusProcessing(IEnumerable<ElementGetDTO> data, IRepositoryWrapper repository, Guid drawingId) : base(data, repository, drawingId)
