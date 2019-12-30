@@ -112,3 +112,5 @@
 /OpeningServer/.vs/config
 /OpeningServer/Repository/bin/Debug/netcoreapp2.2/Microsoft.AspNetCore.Mvc.Abstractions.dll
 /OpeningServer/Repository/bin/Debug/netcoreapp2.2/Microsoft.AspNetCore.Mvc.Abstractions.xml
+/OpeningServer/.vs/OpeningServer/v16/Server/sqlite3/storage.ide-shm
+/OpeningServer/.vs/OpeningServer/v16/Server/sqlite3/storage.ide-wal
