@@ -251,5 +251,11 @@ namespace OpeningServer.Helper.Cluster
             var elements = await repository.Element.FindByCondition(e => e.IdManager.Equals(idManager)).ToListAsync();
             return !elements.Any(x => !x.Status.Equals(Define.DELETED));
         }
+
+        public static async Task<bool> IsDeletedAllExept(Guid idManager, Guid idExept, IRepositoryWrapper repository)
+        {
+            var elements = await repository.Element.FindByCondition(e => e.IdManager.Equals(idManager) && !e.Id.Equals(idExept)).ToListAsync();
+            return !elements.Any(x => !x.Status.Equals(Define.DELETED));
+        }
     }
 }

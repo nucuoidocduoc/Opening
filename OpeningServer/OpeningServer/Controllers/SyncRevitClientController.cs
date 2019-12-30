@@ -53,5 +53,15 @@ namespace OpeningServer.Controllers
                 throw;
             }
         }
+
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> LocalRollbackAsync()
+        //{
+        //    try {
+        //    }
+        //    catch (Exception) {
+        //        throw;
+        //    }
+        //}
     }
 }

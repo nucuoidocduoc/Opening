@@ -14,5 +14,7 @@ namespace Entities.Models
 
         [ForeignKey(nameof(IdDrawing))]
         public virtual Drawing Drawing { get; set; }
+
+        public virtual IEnumerable<CheckoutVersion> CheckoutVersions { get; set; }
     }
 }

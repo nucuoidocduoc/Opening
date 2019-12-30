@@ -23,16 +23,16 @@ namespace OpeningServer.Controllers
         public async Task<IActionResult> GetProjectByName()
         {
             try {
-                var project = await _repository.Project.GetProjectByNameAsync();
-                foreach (var draw in project.Drawings) {
-                    if (draw.Name.Equals("MEP")) {
-                        draw.Category = "MEPpppp";
-                    }
-                }
-                project.Drawings = null;
-                _repository.SaveChangesAsync();
-                project = await _repository.Project.GetProjectByNameAsync();
-                return Ok(project);
+                //var project = await _repository.Project.GetProjectByNameAsync();
+                //foreach (var draw in project.Drawings) {
+                //    if (draw.Name.Equals("MEP")) {
+                //        draw.Category = "MEPpppp";
+                //    }
+                //}
+                //project.Drawings = null;
+                //_repository.SaveChangesAsync();
+                //project = await _repository.Project.GetProjectByNameAsync();
+                return Ok();
             }
             catch (Exception ex) {
                 return NotFound();
